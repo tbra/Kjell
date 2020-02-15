@@ -63,6 +63,11 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('fredag',fredag))
     dp.add_handler(CommandHandler('inspiro',inspiro))
+    dp.add_handler(CommandHandler('dag',dag))
+    dp.add_handler(CommandHandler('fyra',fyra))
+    dp.add_handler(CommandHandler('citera',citera))
+    dp.add_handler(CommandHandler('cigg',cigg))
+    dp.add_handler(CommandHandler('trav',trav))
     updater.start_polling()
     updater.idle()
     
