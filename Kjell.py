@@ -58,6 +58,10 @@ def trav(bot, update):
     message = r_h()
     bot.send_message(chat_id=chat_id, text=message)
 
+def skrynkel(bot, update):
+    chat_id = update.message.chat_id
+    bot.send_photo(chat_id=chat_id, photo=open('pics/skrynkel/skrynkel.jpg', 'rb'))
+
 def main():
     updater = Updater(secrets.api_token)
     dp = updater.dispatcher
@@ -68,6 +72,7 @@ def main():
     dp.add_handler(CommandHandler('citera',citera))
     dp.add_handler(CommandHandler('cigg',cigg))
     dp.add_handler(CommandHandler('trav',trav))
+    dp.add_handler(CommandHandler('skrynkel',skrynkel))
     updater.start_polling()
     updater.idle()
     
