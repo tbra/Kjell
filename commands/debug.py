@@ -26,14 +26,20 @@ async def set_default_commands(update: Update, context: ContextTypes.DEFAULT_TYP
     set_commands = await context.bot.set_my_commands(new_commands)
     await update.message.reply_text(set_commands)
 
-@command_handler("test", "Svarar med info om användaren, /test error simulerar ett exception", 1)
+@command_handler("test", "/test error, /test chat, /test user, /test message", 1)
 async def test(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.debug("Trigger command_handler %s", __name__)
     if context.args and context.args[0] == 'error':
         raise Exception("Ett testfel")
+    if context.args and context.args[0] == 'chat':
+        message = update.effective_chat
+    elif context.args and context.args[0] == 'user':
+        message = update.effective_user
+    elif context.args and context.args[0] == 'message':
+        message = update.effective_message
     else:
-        user = update.effective_user
-        await update.message.reply_text(user)
+        message = "Test"
+    await update.message.reply_text(message)
 
 @command_handler("error", "Det senaste felmeddelandet", 1)
 async def last_error(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
