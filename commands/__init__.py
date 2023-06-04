@@ -1,0 +1,9 @@
+import commands.api
+import commands.chat
+import commands.debug
+import commands.event
+import commands.kjell
+import commands.link
+import commands.random
+import commands.skatt
+import commands.time
