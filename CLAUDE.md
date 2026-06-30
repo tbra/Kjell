@@ -9,6 +9,7 @@ Kjell is a Telegram group bot written in Python. It uses the `python-telegram-bo
 ## Running the bot
 
 ```bash
+pip install -r requirements.txt
 python main.py
 ```
 
@@ -53,6 +54,6 @@ Commands register themselves at import time using decorators from `bot/register_
 
 `utils/debug.py` configures stdlib logging at the level set in `utils/constants.py` (`LOG_LEVEL = 'INFO'`). The `error` handler catches all unhandled exceptions, stores the latest traceback in a module-level variable (retrievable with `/error`), and forwards the full traceback to `DEBUG_CHAT_ID`.
 
-## Known issues
+## Weather location
 
-`commands/random.py` references `./pics/intefredag/` and `./pics/fredagsgrodan/` but the actual images live at `resources/pics/intefredag/` and `resources/pics/fredagsgrodan/`. The `/fredag` command will fail unless the bot is run from `resources/` or the paths are corrected.
+`utils/constants.py` contains `WEATHER_LAT` and `WEATHER_LON` (default: Stockholm). Change these to match your group's location. The `/vader` command uses SMHI's free open-data API, which only covers Sweden.

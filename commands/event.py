@@ -14,9 +14,15 @@ from telegram.ext import (ContextTypes, ConversationHandler, MessageHandler,
 from utils import logger
 from utils.secret import CALENDAR_ID
 
-CREDENTIALS = calendar_credentials()
-CALENDAR = GoogleCalendar(default_calendar=CALENDAR_ID, credentials=CREDENTIALS)
 DETAILS, SUBMIT = range(2)
+_calendar = None
+
+
+def _get_calendar() -> GoogleCalendar:
+    global _calendar
+    if _calendar is None:
+        _calendar = GoogleCalendar(default_calendar=CALENDAR_ID, credentials=calendar_credentials())
+    return _calendar
 EVENT_KEYBOARD = [
     ["Namn"],
     ["Datum", "Start tid", "Slut tid"],
@@ -127,7 +133,7 @@ async def event_submit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         if user_data.get('Beskrivning'):
             event.description = user_data.get('Beskrivning')
         try:
-            CALENDAR.add_event(event)
+            _get_calendar().add_event(event)
             await update.message.reply_text("Aight", reply_markup=ReplyKeyboardRemove())
             user_data.clear()
             return ConversationHandler.END
