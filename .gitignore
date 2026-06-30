@@ -36,3 +36,5 @@ lib/
 lib64
 include/
 pics/
+update.sh
+update.log
