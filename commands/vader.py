@@ -20,18 +20,11 @@ _SYMBOLS = {
 }
 
 
-def _param(parameters: list, name: str):
-    for p in parameters:
-        if p['name'] == name:
-            return p['values'][0]
-    return None
-
-
 @command_handler("vader", "Aktuellt väder")
 async def vader(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.debug("Trigger command_handler %s", __name__)
     url = (
-        f"https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2"
+        f"https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1"
         f"/geotype/point/lon/{WEATHER_LON}/lat/{WEATHER_LAT}/data.json"
     )
     response = requests.get(url, timeout=10)
@@ -39,9 +32,9 @@ async def vader(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("Kunde inte hämta väderdata 🌧")
         return
     data = response.json()
-    params = data['timeSeries'][0]['parameters']
-    temp = _param(params, 't')
-    wind = _param(params, 'ws')
-    symbol = int(_param(params, 'Wsymb2') or 0)
+    entry = data['timeSeries'][0]['data']
+    temp = entry.get('air_temperature')
+    wind = entry.get('wind_speed')
+    symbol = int(entry.get('symbol_code') or 0)
     desc = _SYMBOLS.get(symbol, "?")
     await update.message.reply_text(f"{desc}\n🌡 {temp}°C\n💨 {wind} m/s")
