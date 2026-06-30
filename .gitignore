@@ -26,3 +26,13 @@ utils/__pycache__/logging.cpython-38.pyc
 utils/__pycache__/secret.cpython-38.pyc
 utils/__pycache__/secrets.cpython-38.pyc
 utils/secret.py
+service.json
+sync_token.pickle
+__pycache__/
+*.pyc
+pyvenv.cfg
+bin/
+lib/
+lib64
+include/
+pics/
