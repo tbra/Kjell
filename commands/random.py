@@ -69,14 +69,14 @@ trav_list =  [
 async def fredag(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.debug("Trigger command_handler %s", __name__)
     await update.message.reply_text("Fredag?")
-    directory = './pics/intefredag/'
+    directory = 'resources/pics/intefredag/'
     message = 'Nepp'
     if (datetime.today().weekday() == 4):
         message = 'Haha aa de ere'
-        directory = './pics/fredagsgrodan/'
+        directory = 'resources/pics/fredagsgrodan/'
     file = open(os.path.join(directory, random.choice(os.listdir(directory))), 'rb')
-    await context.bot.send_message(chat_id=context._chat_id, text=message)
-    await context.bot.send_photo(chat_id=context._chat_id, photo=file)
+    await context.bot.send_message(chat_id=update.message.chat_id, text=message)
+    await context.bot.send_photo(chat_id=update.message.chat_id, photo=file)
 
 @command_handler("herrskrynkel", "Herr skrynkel pls")
 async def skrynkel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

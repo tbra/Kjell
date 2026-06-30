@@ -48,9 +48,6 @@ def conversation_handler(
     """
     Register a conversation handler.
     """
-    print(type(commands), commands)
-    print(type(states), states)
-    print(type(fallbacks), fallbacks)
     logger.info(
         "Adding ConversationHandler with commands: %s, states: %s, and fallbacks: %s",
         commands, states, fallbacks
@@ -58,9 +55,6 @@ def conversation_handler(
     def decorator(func: Callable) -> Callable:
         command = commands.get('command')
         entry_points = [CommandHandler(command, func)]
-        print(type(entry_points), entry_points)
-        print(type(states), states)
-        print(type(fallbacks), fallbacks)
         handler = ConversationHandler(entry_points, states, fallbacks)
         application.add_handler(handler)
         if commands.get('description'):

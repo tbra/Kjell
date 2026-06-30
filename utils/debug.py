@@ -32,7 +32,6 @@ async def error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
         f"<pre>context.user_data = {html.escape(str(context.user_data))}</pre>\n\n"
         f"<pre>{html.escape(tb_string)}</pre>"
     )
-    await update.message.reply_text("Något gick fel")
     await context.bot.send_message(chat_id=DEBUG_CHAT_ID, text=message, parse_mode=constants.ParseMode.HTML)
 
 def get_latest_error() -> str:

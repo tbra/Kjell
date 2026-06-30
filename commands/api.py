@@ -41,3 +41,43 @@ async def inspiro(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.debug("Trigger command_handler %s", __name__)
     message = requests.get('http://inspirobot.me/api?generate=true', timeout=10)
     await update.message.reply_photo(message.text)
+
+@command_handler("epic", "Gratis på Epic Store just nu")
+async def epic(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.debug("Trigger command_handler %s", __name__)
+    url = "https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions"
+    response = requests.get(url, timeout=10)
+
+    if response.status_code == 200:
+        games = response.json()['data']['Catalog']['searchStore']['elements']
+        valid_games = [game for game in games if "Mystery Game" not in game['title']]
+
+        if valid_games:
+            message = "Nuvarande gratis spel på Epic Store:\n"
+            for game in valid_games:
+                title = game['title']
+                description = game['description']
+                image_url = game['keyImages'][0]['url'] if game['keyImages'] else None
+                link = f"https://www.epicgames.com/store/en-US/p/{game['productSlug']}" if game['productSlug'] else None
+                end_date_str = game['expiryDate']
+
+                end_date = datetime.strptime(end_date_str, "%Y-%m-%dT%H:%M:%S.%fZ") if end_date_str else None
+                remaining_time = f"\nGratis till: {end_date.strftime('%Y-%m-%d %H:%M')}" if end_date else ""
+
+                game_info = f"*{title}*\n"
+                if description:
+                    game_info += f"{description}\n"
+                if end_date_str:
+                    game_info += f"{remaining_time}\n".replace('-', '\\-')
+                if link:
+                    game_info += f"[Läs mer och hämta här]({link})\n\n"
+                message += game_info
+
+            if image_url:
+                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=message, parse_mode='MarkdownV2')
+        else:
+            message = "Inga gratis spel tillgängliga just nu."
+            await update.message.reply_text(message)
+    else:
+        message = "Ett fel uppstod vid hämtning av spelinformationen från Epic Store."
+        await update.message.reply_text(message)

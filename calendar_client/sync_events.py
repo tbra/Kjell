@@ -8,6 +8,7 @@ from dateutil.parser import parse
 from telegram import constants
 from telegram.ext import ContextTypes
 from utils.secret import CALENDAR_ID, CHAT_ID
+from utils import logger
 
 from .authenticate_calendar import calendar_service
 
@@ -18,22 +19,28 @@ def sync_events():
     Uses the sync_token.pickle file to only get changes since the last sync.
     """
     calendar = calendar_service()
-    sync_token = None
+    sync_token = 'init'
     if os.path.exists('sync_token.pickle'):
         with open('sync_token.pickle', 'rb') as token:
             sync_token = pickle.load(token)
-    if not sync_token:
-        events_result = calendar.events().list(calendarId=CALENDAR_ID).execute()
-    else:
+    logger.info(f"Old syncToken: {sync_token}, loaded from storage")
+    try:
+        logger.info("Trying incremental sync")
         events_result = calendar.events().list(calendarId=CALENDAR_ID, syncToken=sync_token).execute()
-    events = events_result.get('items', [])
-    if not events:
-        return None
+        events = events_result.get('items', [])
+    except:
+        logger.info("Incremental sync failed")
+        events_result = calendar.events().list(calendarId=CALENDAR_ID).execute()
+        events = None
     new_sync_token = events_result.get('nextSyncToken')
     if new_sync_token:
+        logger.info(f"New syncToken: {new_sync_token}, saved to storage")
         with open('sync_token.pickle', 'wb') as token:
             pickle.dump(new_sync_token, token)
-    return events
+    if events:
+        logger.info(f"Events: {events}")
+        return events
+    return None
 
 
 async def sync_calendar(context: ContextTypes.DEFAULT_TYPE):
