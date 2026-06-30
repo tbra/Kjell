@@ -42,8 +42,8 @@ def message_handler(trigger: filters.BaseFilter):
 
 def conversation_handler(
         commands: Dict[str, str], 
-        states: Dict[object, List[BaseHandler[Update, Any]]],
-        fallbacks: List[BaseHandler[Update, Any]], 
+        states: Dict[object, List[BaseHandler]],
+        fallbacks: List[BaseHandler],
         **kwargs):
     """
     Register a conversation handler.
