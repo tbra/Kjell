@@ -7,3 +7,8 @@ import commands.link
 import commands.random
 import commands.skatt
 import commands.time
+import commands.kalender
+import commands.paminn
+import commands.vader
+import commands.rost
+import commands.triggers
